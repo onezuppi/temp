@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.http.address=:80"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+    restart: unless-stopped
+    networks:
+      - traefik_network
+
+  marzban:
+    container_name: marzban
+    image: gozargah/marzban:latest
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    command: ["bash", "-c", "sed -i 's/127\\.0\\.0\\.1/0.0.0.0/g' main.py; alembic upgrade head; python main.py"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.marzban.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.marzban.tls.certresolver=letsencrypt"
+    restart: unless-stopped
+    networks:
+      - traefik_network
+    volumes:
+      - /var/lib/marzban:/var/lib/marzban
+      - ./xray:/usr/local/share/xray
+      - ./marzban/xray_config.json:/code/xray_config.json
+      - ./marzban/db.sqlite3:/code/db.sqlite3 
+      - ./marzban/templates:/code/templates
+      - ./marzban/singbox.py:/code/app/subscription/singbox.py
+
+networks:
+  traefik_network:
+    driver: bridge
