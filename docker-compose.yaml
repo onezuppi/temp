@@ -42,7 +42,6 @@ services:
       - traefik_network
     volumes:
       - /var/lib/marzban:/var/lib/marzban
-      - ./xray:/usr/local/share/xray
       - ./marzban/xray_config.json:/code/xray_config.json
       - ./marzban/db.sqlite3:/code/db.sqlite3 
       - ./marzban/templates:/code/templates
