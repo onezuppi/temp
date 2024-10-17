@@ -44,7 +44,7 @@ services:
       - /var/lib/marzban:/var/lib/marzban
       - ./marzban/xray_config.json:/code/xray_config.json
       - ./marzban/templates:/code/templates
-      # - ./marzban/singbox.py:/code/app/subscription/singbox.py
+      - ./marzban/singbox.py:/code/app/subscription/singbox.py
 
 networks:
   traefik_network:

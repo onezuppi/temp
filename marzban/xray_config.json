@@ -52,21 +52,6 @@
                     }
                 ]
             },
-            "streamSettings": {
-                "network": "tcp",
-                "security": "tls",
-                "tlsSettings": {
-                    "rejectUnknownSni": true,
-                    "minVersion": "1.3",
-                    "certificates": [
-                        {
-                            "ocspStapling": 3600,
-                            "certificateFile": "/etc/ssl/certs/fullchain.pem",
-                            "keyFile": "/etc/ssl/certs/key.pem"
-                        }
-                    ]
-                }
-            },
             "sniffing": {
                 "enabled": true,
                 "destOverride": [
