@@ -43,11 +43,12 @@ http {
     real_ip_header proxy_protocol;
     
     server {
-        listen 443 ssl http2;
-        listen [::]:443 ssl http2;
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        http2 on;
         server_name $DOMAIN;
 
-        ssl_certificate      /etc/ssl/private/privkey.pem;
+        ssl_certificate      /etc/ssl/certs/fullchain.pem;
         ssl_certificate_key  /etc/ssl/private/privkey.pem;
 
         location / {
@@ -81,11 +82,12 @@ http {
     }
 
     server {
-        listen 443 ssl http2;
-        listen [::]:443 ssl http2;
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        http2 on;
         server_name $PANEL_SUBDOMAIN.$DOMAIN;
 
-        ssl_certificate      /etc/ssl/private/privkey.pem;
+        ssl_certificate      /etc/ssl/certs/fullchain.pem;
         ssl_certificate_key  /etc/ssl/private/privkey.pem;
 
         location /dashboard/ {
@@ -114,11 +116,12 @@ http {
     }
 
     server {
-        listen 443 ssl http2;
-        listen [::]:443 ssl http2;
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        http2 on;
         server_name $SUB_SUBDOMAIN.$DOMAIN;
 
-        ssl_certificate      /etc/ssl/private/privkey.pem;
+        ssl_certificate      /etc/ssl/certs/fullchain.pem;
         ssl_certificate_key  /etc/ssl/private/privkey.pem;
 
         location /sub/ {
