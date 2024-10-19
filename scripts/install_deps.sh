@@ -40,6 +40,10 @@ check_dependencies() {
     sudo apt update -y
     sudo apt upgrade -y
 
+    if ! command -v socat >/dev/null 2>&1; then
+        echo "socat not found. Installing..."
+        install_package socat
+    fi
     if ! command -v git >/dev/null 2>&1; then
         echo "git not found. Installing..."
         install_package git
