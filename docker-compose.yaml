@@ -14,7 +14,7 @@ services:
         ipv4_address: 172.18.0.2
     volumes:
       - ./certs:/etc/ssl/certs:ro # certificates
-      - ./certs:/var/lib/marzban/certsro # certificates
+      - ./certs:/var/lib/marzban/certs:ro # certificates
       - ./xray:/usr/local/share/xray # geo-files
       - ./xray/xray:/usr/local/bin/xray # xray core
       - ./marzban/xray_config.json:/code/xray_config.json # xray core config
