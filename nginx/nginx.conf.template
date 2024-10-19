@@ -43,15 +43,12 @@ http {
     real_ip_header proxy_protocol;
     
     server {
-        listen 443 proxy_protocol;
-        http2 on;
+        listen 443 ssl http2;
+        listen [::]:443 ssl http2;
         server_name $DOMAIN;
 
-        ssl_certificate /etc/ssl/certs/fullchain.pem;
-        ssl_certificate_key /etc/ssl/private/privkey.pem;
-        ssl_protocols TLSv1.2 TLSv1.3;
-        ssl_prefer_server_ciphers on;
-        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_certificate      /etc/ssl/private/privkey.pem;
+        ssl_certificate_key  /etc/ssl/private/privkey.pem;
 
         location / {
             limit_req zone=mylimit burst=20;
@@ -84,15 +81,12 @@ http {
     }
 
     server {
-        listen 443 proxy_protocol;
-        http2 on;
+        listen 443 ssl http2;
+        listen [::]:443 ssl http2;
         server_name $PANEL_SUBDOMAIN.$DOMAIN;
 
-        ssl_certificate /etc/ssl/certs/fullchain.pem;
-        ssl_certificate_key /etc/ssl/private/privkey.pem;
-        ssl_protocols TLSv1.2 TLSv1.3;
-        ssl_prefer_server_ciphers on;
-        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_certificate      /etc/ssl/private/privkey.pem;
+        ssl_certificate_key  /etc/ssl/private/privkey.pem;
 
         location /dashboard/ {
             limit_req zone=mylimit burst=20;
@@ -120,15 +114,12 @@ http {
     }
 
     server {
-        listen 443 proxy_protocol;
-        http2 on;
+        listen 443 ssl http2;
+        listen [::]:443 ssl http2;
         server_name $SUB_SUBDOMAIN.$DOMAIN;
 
-        ssl_certificate /etc/ssl/certs/fullchain.pem;
-        ssl_certificate_key /etc/ssl/private/privkey.pem;
-        ssl_protocols TLSv1.2 TLSv1.3;
-        ssl_prefer_server_ciphers on;
-        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_certificate      /etc/ssl/private/privkey.pem;
+        ssl_certificate_key  /etc/ssl/private/privkey.pem;
 
         location /sub/ {
             limit_req zone=mylimit burst=20;
