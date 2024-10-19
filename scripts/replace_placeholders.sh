@@ -1,28 +1,37 @@
 #!/bin/bash
 
-# Функция для замены плейсхолдеров в конфигурации NGINX
-replace_placeholders() {
-    NGINX_CONF_TEMPLATE="nginx/nginx-template.conf"  # Шаблонный файл
-    NGINX_CONF="nginx/nginx.conf"                   # Результирующий файл
-    ENV_FILE=".env"                                 # Файл с переменными
+# Задаем значения переменных
+DOMAIN="ikanam.tech"
+FAKE_SITE="https://longdogechallenge.com"
+PANEL_SUBDOMAIN="hidden"
+SUB_SUBDOMAIN="sub"
 
-    # Загружаем переменные из .env
-    if [ -f "$ENV_FILE" ]; then
-        export $(grep -v '^#' "$ENV_FILE" | xargs)
-    else
-        echo "Файл $ENV_FILE не найден!"
-        exit 1
-    fi
+# Создаем временный Python-скрипт для замены переменных
+cat << EOF > replace_vars.py
+DOMAIN = "$DOMAIN"
+FAKE_SITE = "$FAKE_SITE"
+PANEL_SUBDOMAIN = "$PANEL_SUBDOMAIN"
+SUB_SUBDOMAIN = "$SUB_SUBDOMAIN"
 
-    # Используем sed для замены только необходимых переменных
-    sed -e "s|\${DOMAIN}|$DOMAIN|g" \
-        -e "s|\${FAKE_SITE}|$FAKE_SITE|g" \
-        -e "s|\${PANEL_SUBDOMAIN}|$PANEL_SUBDOMAIN|g" \
-        -e "s|\${SUB_SUBDOMAIN}|$SUB_SUBDOMAIN|g" \
-        "$NGINX_CONF_TEMPLATE" > "$NGINX_CONF"
+nginx_conf_template = "nginx/nginx.conf.template"
+nginx_conf = "nginx/nginx.conf"
 
-    echo "nginx.conf updated with domain-specific entries."
-}
+with open(nginx_conf_template, 'r') as template_file:
+    config_data = template_file.read()
 
-# Вызов функции
-replace_placeholders
+config_data = config_data.replace("\$DOMAIN", DOMAIN)
+config_data = config_data.replace("\$FAKE_SITE", FAKE_SITE)
+config_data = config_data.replace("\$PANEL_SUBDOMAIN", PANEL_SUBDOMAIN)
+config_data = config_data.replace("\$SUB_SUBDOMAIN", SUB_SUBDOMAIN)
+
+with open(nginx_conf, 'w') as config_file:
+    config_file.write(config_data)
+
+print("nginx.conf updated with domain-specific entries.")
+EOF
+
+# Запускаем Python-скрипт
+python3 replace_vars.py
+
+# Удаляем временный Python-скрипт
+rm replace_vars.py
