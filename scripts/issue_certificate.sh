@@ -18,7 +18,7 @@ issue_certificate() {
     mkdir -p certs
 
     # Issue the certificate
-    ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt \
+    ~/.acme.sh/acme.sh --debug 2 --set-default-ca --server letsencrypt \
     --issue --standalone -d "$DOMAIN" -d "$PANEL_SUBDOMAIN.$DOMAIN" -d "$SUB_SUBDOMAIN.$DOMAIN" \
     --key-file certs/key.pem --fullchain-file certs/fullchain.pem
 

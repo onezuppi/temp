@@ -43,8 +43,17 @@ http {
 
     server {
         listen 80;
+        listen [::]:80;
         server_name $DOMAIN $PANEL_SUBDOMAIN.$DOMAIN $SUB_SUBDOMAIN.$DOMAIN;
-        return 301 https://$host$request_uri;
+        
+        
+        location /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+        
+        location / {
+            return 301 https://$host$request_uri;
+        }
     }
 
     server {
@@ -52,8 +61,8 @@ http {
         http2 on;
         server_name $DOMAIN;
 
-        ssl_certificate      /etc/ssl/certs/fullchain.pem;
-        ssl_certificate_key  /etc/ssl/private/privkey.pem;
+        ssl_certificate      /etc/nginx/ssl/live/$DOMAIN/fullchain.pem;
+        ssl_certificate_key  /etc/nginx/ssl/live/$DOMAIN/privkey.pem;
 
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_prefer_server_ciphers off;
@@ -94,8 +103,8 @@ http {
         http2 on;
         server_name $PANEL_SUBDOMAIN.$DOMAIN;
 
-        ssl_certificate      /etc/ssl/certs/fullchain.pem;
-        ssl_certificate_key  /etc/ssl/private/privkey.pem;
+        ssl_certificate      /etc/nginx/ssl/live/$DOMAIN/fullchain.pem;
+        ssl_certificate_key  /etc/nginx/ssl/live/$DOMAIN/privkey.pem;
 
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_prefer_server_ciphers off;
@@ -131,8 +140,8 @@ http {
         http2 on;
         server_name $SUB_SUBDOMAIN.$DOMAIN;
 
-        ssl_certificate      /etc/ssl/certs/fullchain.pem;
-        ssl_certificate_key  /etc/ssl/private/privkey.pem;
+        ssl_certificate      /etc/nginx/ssl/live/$DOMAIN/fullchain.pem;
+        ssl_certificate_key  /etc/nginx/ssl/live/$DOMAIN/privkey.pem;
 
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_prefer_server_ciphers off;

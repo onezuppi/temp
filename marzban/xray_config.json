@@ -8,7 +8,7 @@
         "rules": [
             {
                 "type": "field",
-                "domain": "domain:my_domain.com",
+                "domain": "domain:mydomain.com",
                 "outboundTag": "webserver"
             },
             {
