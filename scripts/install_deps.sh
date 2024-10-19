@@ -40,6 +40,10 @@ check_dependencies() {
     sudo apt update -y
     sudo apt upgrade -y
 
+    if ! command -v idn >/dev/null 2>&1; then
+        echo "idn not found. Installing..."
+        install_package idn
+    fi
     if ! command -v socat >/dev/null 2>&1; then
         echo "socat not found. Installing..."
         install_package socat
