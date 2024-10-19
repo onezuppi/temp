@@ -15,10 +15,10 @@ issue_certificate() {
     echo -e "e[32m[INFO]e[0m Issuing wildcard certificate for $DOMAIN"
     ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt --issue --standalone -d "$DOMAIN"
     -d "*.$DOMAIN"
-    --key-file ~/services/certs/key.pem
-    --fullchain-file ~/services/certs/fullchain.pem
+    --key-file ./certs/key.pem
+    --fullchain-file ./certs/fullchain.pem
 
-    echo "Certificates saved in ~/services/certs/"
+    echo "Certificates saved in ./certs/"
 }
 
 install_acme_sh
