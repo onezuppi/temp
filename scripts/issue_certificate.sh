@@ -19,7 +19,7 @@ issue_certificate() {
 
     # Issue the certificate
     ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt \
-    --issue --standalone --debug 2  -d "$DOMAIN" -d "$PANEL_SUBDOMAIN.$DOMAIN" -d "$SUB_SUBDOMAIN.$DOMAIN" \
+    --issue --standalone -d "$DOMAIN" -d "$PANEL_SUBDOMAIN.$DOMAIN" -d "$SUB_SUBDOMAIN.$DOMAIN" \
     --key-file certs/key.pem --fullchain-file certs/fullchain.pem
 
     echo "Certificates saved in certs"
