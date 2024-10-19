@@ -25,5 +25,14 @@ issue_certificate() {
     echo "Certificates saved in certs"
 }
 
+
+# Загрузка переменных из .env
+if [ -f .env ]; then
+  export $(cat .env | grep -v '#' | awk '/=/ {print $1}')
+else
+  echo ".env file not found!"
+  exit 1
+fi
+
 install_acme_sh
 issue_certificate
