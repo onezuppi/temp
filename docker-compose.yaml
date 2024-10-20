@@ -4,6 +4,9 @@ services:
   marzban:
     container_name: marzban
     image: gozargah/marzban:latest
+    ports:
+      - 443:443
+      - 80:80
     env_file:
       - .env
     restart: unless-stopped
@@ -18,29 +21,29 @@ services:
       - ./marzban/db.sqlite3:/code/db.sqlite3 # users DB
       - ./marzban/templates:/code/templates # templates for sub and pages
       - ./marzban/singbox.py:/code/app/subscription/singbox.py #signs 
-  nginx:
-      image: nginx:latest
-      container_name: nginx
-      restart: unless-stopped
-      ports:
-      - 443:443
-      - 80:80
-      env_file:
-      - .env
-      logging:
-        driver: 'json-file'
-        options:
-          max-size: '10m'
-      networks:
-        default:
-          ipv4_address: 172.18.0.3
-      volumes:
-        - ./nginx/error.log:/var/log/nginx/error.log
-        - ./nginx/access.log:/var/log/nginx/access.log
-        - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-        - ./certbot/conf:/etc/letsencrypt
-        - ./certbot/www:/var/www/certbot
-      command: [nginx-debug, "-g", "daemon off;"]
+  # nginx:
+  #     image: nginx:latest
+  #     container_name: nginx
+  #     restart: unless-stopped
+  #     ports:
+  #     - 443:443
+  #     - 80:80
+  #     env_file:
+  #     - .env
+  #     logging:
+  #       driver: 'json-file'
+  #       options:
+  #         max-size: '10m'
+  #     networks:
+  #       default:
+  #         ipv4_address: 172.18.0.3
+  #     volumes:
+  #       - ./nginx/error.log:/var/log/nginx/error.log
+  #       - ./nginx/access.log:/var/log/nginx/access.log
+  #       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #       - ./certbot/conf:/etc/letsencrypt
+  #       - ./certbot/www:/var/www/certbot
+  #     command: [nginx-debug, "-g", "daemon off;"]
 
 
 networks:
