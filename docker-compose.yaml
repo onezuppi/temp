@@ -41,25 +41,13 @@ services:
         - ./certs:/etc/nginx/certs
         - /tmp/letsencrypt/www:/tmp/letsencrypt/www
       command: [nginx-debug, "-g", "daemon off;"]
-  letsencrypt:
-    image: gordonchan/auto-letsencrypt
-    links:
-      - nginx
-    volumes:
-      - /var/log/letsencrypt/:/var/log/letsencrypt
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
-      - /tmp/letsencrypt/www:/tmp/letsencrypt/www
-      - ./certs:/etc/nginx/certs
-    environment:
-      - EMAIL=${EMAIL}
-      - SERVER_CONTAINER=nginx
-      - WEBROOT_PATH=/tmp/letsencrypt/www
-      - CERTS_PATH=/etc/nginx/certs
-      - DOMAINS=e-${DOMAIN} ${SUB_SUBDOMAIN}.${DOMAIN} ${PANEL_SUBDOMAIN}.${DOMAIN}
-      - CHECK_FREQ=7
-    restart: unless-stopped
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes: 
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --standalone --webroot -w /var/www/certbot --force-renewal --email ${EMAIL} -d ${DOMAIN} -d ${SUB_SUBDOMAIN}.${DOMAIN} -d ${PANEL_SUBDOMAIN}.${DOMAIN} --agree-tos
 
 
 networks:
