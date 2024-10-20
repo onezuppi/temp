@@ -11,7 +11,7 @@ services:
       default:
         ipv4_address: 172.18.0.2
     volumes:
-      - ./certbot/conf:/etc/ssl/certs:ro # certificates
+      - ./certbot/conf:/etc/letsencrypt:ro # certificates
       - ./xray:/usr/local/share/xray # geo-files
       - ./xray/xray:/usr/local/bin/xray # xray core
       - ./marzban/xray_config.json:/code/xray_config.json # xray core config
