@@ -1,90 +1,77 @@
 {
     "log": {
-        "loglevel": "error",
-        "error": "/usr/local/share/xray/error.log"
+      "loglevel": "warning"
     },
     "routing": {
-        "domainStrategy": "IPIfNonMatch",
-        "rules": [
-            {
-                "type": "field",
-                "domain": "domain:mydomain.com",
-                "outboundTag": "webserver"
-            },
-            {
-                "type": "field",
-                "ip": [
-                    "geoip:ru"
-                ],
-                "outboundTag": "block"
-            },
-            {
-                "type": "field",
-                "domain": [
-                    "geosite:category-ru",
-                    "geosite:category-gov-ru",
-                    "geosite:mailru",
-                    "geosite:yandex",
-                    "geosite:vk"
-                ],
-                "outboundTag": "block"
-            }
-        ]
-    },
-    "dns": {
-        "servers": [
-            "8.8.8.8"
-        ]
+      "rules": [
+        {
+            "outboundTag": "DIRECT",
+            "domain": [
+              "full:cp.cloudflare.com",
+              "domain:msftconnecttest.com",
+              "domain:msftncsi.com",
+              "domain:connectivitycheck.gstatic.com",
+              "domain:captive.apple.com",
+              "full:detectportal.firefox.com",
+              "domain:networkcheck.kde.org",
+              "full:*.gstatic.com"
+            ],
+            "type": "field"
+          },
+        {
+          "ip": [
+            "geoip:private"
+          ],
+          "outboundTag": "BLOCK",
+          "type": "field"
+        }
+      ]
     },
     "inbounds": [
         {
-            "tag": "VLESS TCP TLS",
+            "tag": "VLESS TCP REALITY",
             "listen": "0.0.0.0",
             "port": 443,
             "protocol": "vless",
             "settings": {
-                "clients": [],
-                "decryption": "none",
-                "fallbacks": [
-                    {
-                        "dest": "nginx:443",
-                        "xver": 1
-                    }
+              "clients": [],
+              "decryption": "none"
+            },
+            "streamSettings": {
+              "network": "tcp",
+              "tcpSettings": {},
+              "security": "reality",
+              "realitySettings": {
+                "show": false,
+                "dest": "tradingview.com:443",
+                "xver": 0,
+                "serverNames": [
+                  "tradingview.com"
+                ],
+                "privateKey": "wLIk_m0FnGrVJwGrsm9K2TVbOIRzb_wPXSf3pbTaQhM",
+                "shortIds": [
+                  "5be7cb94245f60a3"
                 ]
+              }
             },
             "sniffing": {
-                "enabled": true,
-                "destOverride": [
-                    "http",
-                    "tls"
-                ]
+              "enabled": true,
+              "destOverride": [
+                "http",
+                "tls",
+                "quic"
+              ]
             }
-        }
+          },
     ],
     "outbounds": [
-        {
-            "protocol": "freedom",
-            "tag": "direct"
-        },
-        {
-            "protocol": "blackhole",
-            "tag": "block"
-        },
-        {
-            "protocol": "freedom",
-            "tag": "webserver",
-            "settings": {
-                "redirect": "127.0.0.1:443",
-                "proxy_protocol": 0
-            }
-        }
-    ],
-    "policy": {
-        "levels": {
-            "0": {
-                "handshake": 3,
-                "connIdle": 289
-            }
-        }
-    }
-}
+      {
+        "protocol": "freedom",
+        "tag": "DIRECT"
+      },
+      {
+        "protocol": "blackhole",
+        "tag": "BLOCK"
+      }
+    ]
+  }
