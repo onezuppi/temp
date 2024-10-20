@@ -22,8 +22,8 @@ services:
       image: nginx:latest
       container_name: nginx
       restart: unless-stopped
-      labels:
-        proxy_nginx: "Для SSL"
+      links:
+      - app:ghost
       ports:
       - 443:443
       - 80:80
@@ -59,9 +59,8 @@ services:
       - SERVER_CONTAINER=nginx
       - WEBROOT_PATH=/tmp/letsencrypt/www
       - CERTS_PATH=/etc/nginx/certs
-      - DOMAINS=${DOMAIN}
-      - CHECK_FREQ=1
-      - SERVER_CONTAINER_LABEL=proxy_nginx
+      - DOMAINS=e-${DOMAIN} ${SUB_SUBDOMAIN}.${DOMAIN} ${PANEL_SUBDOMAIN}.${DOMAIN}
+      - CHECK_FREQ=7
     restart: unless-stopped
 
 
