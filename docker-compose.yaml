@@ -22,8 +22,6 @@ services:
       image: nginx:latest
       container_name: nginx
       restart: unless-stopped
-      links:
-      - app:ghost
       ports:
       - 443:443
       - 80:80
