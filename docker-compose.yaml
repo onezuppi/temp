@@ -10,7 +10,6 @@ services:
     networks:
       default:
         ipv4_address: 172.18.0.2
-    command: ["bash", "-c", "sed -i 's/127\\.0\\.0\\.1/0.0.0.0/g' main.py; alembic upgrade head; python main.py"]
     volumes:
       - ./certbot/conf:/etc/ssl/certs:ro # certificates
       - ./xray:/usr/local/share/xray # geo-files
