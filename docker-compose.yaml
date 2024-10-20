@@ -6,8 +6,6 @@ services:
     image: gozargah/marzban:latest
     env_file:
       - .env
-    ports:
-      - 443:443/tcp
     restart: unless-stopped
     networks:
       default:
