@@ -24,6 +24,8 @@ services:
       image: nginx:latest
       container_name: nginx
       restart: unless-stopped
+      labels:
+        proxy_nginx: "Для SSL"
       ports:
       - 443:443/tcp
       - 80:80/tcp
@@ -43,11 +45,26 @@ services:
         - ./certbot/www:/var/www/certbot/:ro
         - ./certbot/conf/:/etc/nginx/ssl/:ro
       command: [nginx-debug, "-g", "daemon off;"]
-  certbot:
-    image: certbot/certbot:latest
+  letsencrypt:
+    image: gordonchan/auto-letsencrypt
+    links:
+      - nginx
     volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
+      - /var/log/letsencrypt/:/var/log/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - /tmp/letsencrypt/www:/tmp/letsencrypt/www
+      - ./certs:/etc/nginx/certs
+    environment:
+      - EMAIL=${EMAIL}
+      - SERVER_CONTAINER=nginx
+      - WEBROOT_PATH=/tmp/letsencrypt/www
+      - CERTS_PATH=/etc/nginx/certs
+      - DOMAINS=${DOMAIN}
+      - CHECK_FREQ=1
+      - SERVER_CONTAINER_LABEL=proxy_nginx
+    restart: unless-stopped
 
 
 networks:
