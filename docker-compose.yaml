@@ -25,8 +25,8 @@ services:
       labels:
         proxy_nginx: "Для SSL"
       ports:
-      - 443:443/tcp
-      - 80:80/tcp
+      - 443:443
+      - 80:80
       env_file:
       - .env
       logging:
