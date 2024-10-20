@@ -41,13 +41,6 @@ services:
         - ./certs:/etc/nginx/certs
         - /tmp/letsencrypt/www:/tmp/letsencrypt/www
       command: [nginx-debug, "-g", "daemon off;"]
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes: 
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email ${EMAIL} -d ${DOMAIN} -d ${SUB_SUBDOMAIN}.${DOMAIN} -d ${PANEL_SUBDOMAIN}.${DOMAIN} --agree-tos
 
 
 networks:
